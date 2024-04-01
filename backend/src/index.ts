@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
 import mongoose from "mongoose";
+import userRoutes from "./routes/users";
+import authRoutes from "./routes/auth";
 
 mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING as string);
 
@@ -12,10 +14,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.get("/", async (req: Request, res: Response) => {
-  res.json({ message: "Hello World!" });
-});
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
-app.listen(8000, function () {
-  console.log("Example app listening on port 8000!");
+app.listen(7000, function () {
+  console.log("Example app listening on port 7000!");
 });
