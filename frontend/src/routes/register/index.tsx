@@ -4,6 +4,8 @@ import {
   email,
   minLength,
   required,
+  reset,
+  value,
 } from "@modular-forms/solid";
 import { A } from "@solidjs/router";
 import Layout from "../layouts/Layout";
@@ -26,6 +28,8 @@ const Register = ({
 
   const handleSubmit: SubmitHandler<RegisterFormData> = (value, event) => {
     console.log(value);
+    // clear from fields
+    reset(registerForm);
   };
   return (
     <Layout>
@@ -43,6 +47,7 @@ const Register = ({
                   <input
                     {...props}
                     type="text"
+                    value={field.value ?? ""}
                     placeholder="First Name"
                     class="border roundedm w-full py-1 px-2 font-normal"
                   />
@@ -63,6 +68,7 @@ const Register = ({
                   <input
                     {...props}
                     type="text"
+                    value={field.value ?? ""}
                     placeholder="Last Name"
                     class="border roundedm w-full py-1 px-2 font-normal"
                   />
@@ -88,6 +94,7 @@ const Register = ({
                   <input
                     {...props}
                     type="email"
+                    value={field.value ?? ""}
                     placeholder="Enter your email"
                     class="border roundedm w-full py-1 px-2 font-normal"
                   />
@@ -113,6 +120,7 @@ const Register = ({
                   <input
                     {...props}
                     type="password"
+                    value={field.value ?? ""}
                     placeholder="Password"
                     class="border roundedm w-full py-1 px-2 font-normal"
                   />
@@ -128,13 +136,25 @@ const Register = ({
             <label class=" text-sm font-bold">Confirm Password</label>
             <Field
               name="confirmPassword"
-              validate={[required("Please re-enter your password.")]}
+              validate={[
+                required("Please re-enter your password."),
+                (value) => {
+                  const password =
+                    registerForm.internal.fields.password?.value.get();
+                  if (password !== value) {
+                    return "Passwords do not match";
+                  } else {
+                    return "";
+                  }
+                },
+              ]}
             >
               {(field, props) => (
                 <>
                   <input
                     {...props}
                     type="password"
+                    value={field.value ?? ""}
                     placeholder="Confirm Password"
                     class="border roundedm w-full py-1 px-2 font-normal"
                   />
@@ -151,7 +171,12 @@ const Register = ({
               Sign in here
             </A>
           </p>
-          <button type="submit">Register</button>
+          <button
+            type="submit"
+            class="bg-blue-600 p-2 text-white font-bold hover:bg-blue-500 text-xl"
+          >
+            Register
+          </button>
         </div>
       </Form>
     </Layout>
